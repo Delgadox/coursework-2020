@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use app\Models\user;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
@@ -16,8 +18,8 @@ class NewsController extends Controller
     public function index()
     {
         $data = News::latest()->paginate(5);
-
-        return view('news.index',compact('data'))
+        $users = user::all()->keyby('id');
+        return view('news.index',compact('data','users'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -94,18 +96,15 @@ class NewsController extends Controller
             'text'=> 'required|min:1|max:255',
             'file_image'=> 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
-        dd($request->file('file_image')->['pathname']);
-        $update = ['name'=>'','text'=>'','file_image'=>''];
-        $update->name = $request->input('name');
-        $update->text= $request->input('text');
-//        $name = $request->file('file_image')->getClientOriginalName();
-        $path = str_replace('public/images/','',$request->file('file_image')->store('public/images'));
-        $update->file_image = $path;
-        dd($update);
-        $news->update($update);
 
-        return redirect()->route('news.index')
-                        ->with('success','Новость успешно изменина');
+        $path = str_replace('public/images/','',$request->file('file_image')->store('public/images'));
+        $news->name=$request->name;
+        $news->text=$request->text;
+        Storage::delete('public/images/'.$news->file_image);
+        $news->file_image=$path;
+        $news->save();
+
+        return redirect()->route('news.index')->with('success','Новость успешно изменина');
     }
 
     /**
@@ -116,9 +115,9 @@ class NewsController extends Controller
      */
     public function destroy(News $news)
     {
+        Storage::delete('public/images/'.$news->file_image);
         $news->delete();
 
-        return redirect()->route('news.index')
-                        ->with('success','Новость удалена');
+        return redirect()->route('news.index')->with('success','Новость удалена');
     }
 }

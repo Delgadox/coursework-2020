@@ -23,26 +23,25 @@
         </div>
     @endif
 
-    <form action="{{ route('news.update',$news->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('user.update',$user->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
          <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Название:</strong>
-                    <input type="text" name="name" value="{{ $news->name }}" class="form-control" placeholder="Title">
+                    <strong>Имя Пользователя:</strong>
+                    <input type="text" name="name" value="{{ $user->name }}" class="form-control" placeholder="name">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Текст:</strong>
-                    <textarea class="form-control" style="height:150px" name="text" placeholder="Detail">{{ $news->text }}</textarea>
+                    <strong>Почта:</strong>
+                    <input type="text" name="email" value="{{ $user->email }}" class="form-control" placeholder="email">
                 </div>
                 <div class="form-group">
-                    <strong>Изображение:</strong>
-                    <img src="{{ asset('storage/images/' . $news->file_image) }}" alt="{{$news->name}}">
-                    <input type="file" name="file_image" id="file_image" class="form-control">
+                    <strong>Пароль:</strong>
+                    <input type="text" name="password" value="{{ $user->password }}" class="form-control" placeholder="password">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\UsersController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,13 +16,16 @@ use App\Http\Controllers\NewsController;
 |
 */
 
-Route::resource('news', NewsController::class);
+Route::resource('news', NewsController::class)->middleware('auth');
+Route::resource('users', UsersController::class)->middleware('auth');
 
+
+// Route::get('news.users', NewsController::class)->middleware('auth');
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('news.index');
 });
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('/');
