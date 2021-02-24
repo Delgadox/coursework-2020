@@ -1,5 +1,5 @@
 @extends('news.layout')
-  
+
 @section('content')
 <div class="row">
     <div class="col-lg-12 margin-tb">
@@ -11,7 +11,7 @@
         </div>
     </div>
 </div>
-   
+
 @if ($errors->any())
     <div class="alert alert-danger">
         Ошибка ввода<br><br>
@@ -22,31 +22,31 @@
         </ul>
     </div>
 @endif
-   
-<form action="{{ route('news.store') }}" method="POST">
+
+<form action="{{ route('news.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
-  
+
      <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Название:</strong>
-                <input type="text" name="name" class="form-control" placeholder="Введите название">
+                <input type="text" name="name" class="form-control" id="name" placeholder="Введите название">
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Текст:</strong>
-                <textarea class="form-control" style="height:150px" name="text" placeholder="Введите текст"></textarea>
+                <textarea class="form-control" style="height:150px" id="text" name="text" placeholder="Введите текст"></textarea>
             </div>
-        </div>            
+        </div>
         <div class="form-group">
                 <strong>Изображение:</strong>
-                <input type="file" name="image" class="form-control">
+                <input type="file" name="file_image" id="file_image" class="form-control">
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                 <button type="submit" class="btn btn-primary">Сохранить</button>
         </div>
     </div>
-   
+
 </form>
 @endsection
