@@ -7,7 +7,7 @@
                 <h2>Edit Product</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('news.index') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('news.index') }}"> Назад</a>
             </div>
         </div>
     </div>

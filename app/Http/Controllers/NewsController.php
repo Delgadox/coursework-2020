@@ -7,9 +7,27 @@ use app\Models\user;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use DB;
+use Telegram;
 
 class NewsController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function __construct()
+    {
+         $this->middleware('permission:news-list|news-create|news-edit|news-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:news-create', ['only' => ['create','store']]);
+         $this->middleware('permission:news-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:news-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -47,6 +65,8 @@ class NewsController extends Controller
             'file_image'=> 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
 
+
+
         $news= new News();
         $news->name = $request->input('name');
         $news->text= $request->input('text');
@@ -68,7 +88,8 @@ class NewsController extends Controller
      */
     public function show(News $news)
     {
-        return view('news.show',compact('news'));
+        $users = user::where('id', $news->user_id)->first();
+        return view('news.show',compact('news', 'users'));
     }
 
     /**

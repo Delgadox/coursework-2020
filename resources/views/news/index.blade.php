@@ -34,7 +34,7 @@
             <td>{{ $value->name }}</td>
             <td>{{ \Str::limit($value->text, 100) }}</td>
             <td><img src="{{ asset('storage/images/' . $value->file_image) }}" alt="{{$value->name}}" width="250px"></td>
-            <td>{{ $users[$value->user_id]->name }}</td>
+            <td><a href="{{ route('users.show', $users[$value->user_id]->id) }}"> {{ $users[$value->user_id]->name }}</a></td>
             <td>{{ $value->message_id }}</td>
             <td>
                 <form action="{{ route('news.destroy',$value->id) }}" method="POST">
