@@ -12,6 +12,8 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB;
 use Telegram;
+use Telegram\Bot\FileUpload\InputFile;
+use Telegram\Bot\Objects\InputMedia\InputMedia;
 
 class NewsController extends Controller
 {
@@ -64,17 +66,21 @@ class NewsController extends Controller
             'text'=> 'required|min:1|max:255',
             'file_image'=> 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
-
-
-
         $news= new News();
         $news->name = $request->input('name');
         $news->text= $request->input('text');
         $name = $request->file('file_image')->getClientOriginalName();
         $path = str_replace('public/images/','',$request->file('file_image')->store('public/images'));
         $news->file_image = $path;
+        $response = Telegram::sendPhoto([
+            'chat_id' => env('TELEGRAM_BOT_GROUP'),
+            'photo' => InputFile::create($request->file('file_image')->getrealpath()),
+            'parse_mode' => 'HTML',
+            'caption' => '<b>'.$request->input('name').'</b>'.PHP_EOL.$request->input('text')
+        ]);
+        $messageId = $response->getMessageId();
         $news->user_id = Auth::user()->id;
-        $news->message_id = 1;
+        $news->message_id = $messageId;
         $news->save();
 
         return redirect()->route('news.index')->with('success','Новость успешно опубликована');
@@ -118,11 +124,24 @@ class NewsController extends Controller
             'file_image'=> 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
 
+        $response = Telegram::deleteMessage([
+            'chat_id' => env('TELEGRAM_BOT_GROUP'),
+            'message_id' => $news->message_id
+        ]);
+        $response = Telegram::sendPhoto([
+            'chat_id' => env('TELEGRAM_BOT_GROUP'),
+            'photo' => InputFile::create($request->file('file_image')->getrealpath()),
+            'parse_mode' => 'HTML',
+            'caption' => '<b>'.$request->input('name').'</b>'.PHP_EOL.$request->input('text')
+        ]);
+        $messageId = $response->getMessageId();
+
         $path = str_replace('public/images/','',$request->file('file_image')->store('public/images'));
         $news->name=$request->name;
         $news->text=$request->text;
         Storage::delete('public/images/'.$news->file_image);
         $news->file_image=$path;
+        $news->message_id = $messageId;
         $news->save();
 
         return redirect()->route('news.index')->with('success','Новость успешно изменина');
@@ -137,6 +156,10 @@ class NewsController extends Controller
     public function destroy(News $news)
     {
         Storage::delete('public/images/'.$news->file_image);
+        $response = Telegram::deleteMessage([
+            'chat_id' => env('TELEGRAM_BOT_GROUP'),
+            'message_id' => $news->message_id
+        ]);
         $news->delete();
 
         return redirect()->route('news.index')->with('success','Новость удалена');
