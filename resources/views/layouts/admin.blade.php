@@ -41,9 +41,10 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
-                            <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
+                            <li><a class="nav-link" href="{{ route('login') }}">{{ Авторизироваться }}</a></li>
+                            <li><a class="nav-link" href="{{ route('register') }}">{{ 'Зарегистрироваться' }}</a></li>
                         @else
+                            <li><a class="nav-link" href="https://t.me/{{ env('TELEGRAM_BOT_GROUP') }}">Ссылка на канал</a></li>
                             <li><a class="nav-link" href="{{ route('users.index') }}">Таблица пользователей</a></li>
                             <li><a class="nav-link" href="{{ route('roles.index') }}">Таблица ролей</a></li>
                             <li><a class="nav-link" href="{{ route('news.index') }}">Таблица новостей</a></li>

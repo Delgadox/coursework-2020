@@ -73,7 +73,7 @@ class NewsController extends Controller
         $path = str_replace('public/images/','',$request->file('file_image')->store('public/images'));
         $news->file_image = $path;
         $response = Telegram::sendPhoto([
-            'chat_id' => env('TELEGRAM_BOT_GROUP'),
+            'chat_id' => '@'.env('TELEGRAM_BOT_GROUP'),
             'photo' => InputFile::create($request->file('file_image')->getrealpath()),
             'parse_mode' => 'HTML',
             'caption' => '<b>'.$request->input('name').'</b>'.PHP_EOL.$request->input('text')
@@ -125,11 +125,11 @@ class NewsController extends Controller
         ]);
 
         $response = Telegram::deleteMessage([
-            'chat_id' => env('TELEGRAM_BOT_GROUP'),
+            'chat_id' => '@'.env('TELEGRAM_BOT_GROUP'),
             'message_id' => $news->message_id
         ]);
         $response = Telegram::sendPhoto([
-            'chat_id' => env('TELEGRAM_BOT_GROUP'),
+            'chat_id' => '@'.env('TELEGRAM_BOT_GROUP'),
             'photo' => InputFile::create($request->file('file_image')->getrealpath()),
             'parse_mode' => 'HTML',
             'caption' => '<b>'.$request->input('name').'</b>'.PHP_EOL.$request->input('text')
@@ -157,7 +157,7 @@ class NewsController extends Controller
     {
         Storage::delete('public/images/'.$news->file_image);
         $response = Telegram::deleteMessage([
-            'chat_id' => env('TELEGRAM_BOT_GROUP'),
+            'chat_id' => '@'.env('TELEGRAM_BOT_GROUP'),
             'message_id' => $news->message_id
         ]);
         $news->delete();
