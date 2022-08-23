@@ -1,4 +1,4 @@
-1. Git clone https://github.com/Delgadox/coursework-2020 ['иное название по желанию'] - Клонирования репозитория 
+1. Git clone https://github.com/Delgadox/coursework-2020 - Клонирования репозитория 
 2. Composer u - скачивание необходимых пакетов
 3. php artisan storage:link - создание псевдо ссылки для сохранения изображений
 4. Создайте базу данных. И запомните её название
